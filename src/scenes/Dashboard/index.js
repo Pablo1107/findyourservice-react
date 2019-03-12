@@ -4,10 +4,11 @@ import Services from './components/Services/index.js'
 
 class App extends Component {
   render() {
+    const { match } = this.props;
     return (
       <div className="App">
         <Sidebar />
-        <Services />
+        <Services match={match}/>
       </div>
     );
   }
