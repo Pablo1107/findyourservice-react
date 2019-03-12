@@ -16,11 +16,26 @@ class Service extends Component {
     this.fetchService();
   }
 
+  componentDidUpdate(prevProps) {
+    const { service } = this.state;
+    const { match } = this.props;
+
+    if(prevProps === undefined) {
+      return false;
+    }
+
+    if(service && service.id != match.params.id) {
+      this.fetchService();
+    }
+  }
+
   fetchService() {
-    axios.get('http://homestead.test/api/services/1', { crossdomain: true })
+    const { match } = this.props;
+
+    axios.get(`http://homestead.test/api/services/${match.params.id}`, { crossdomain: true })
       .then((response) => {
         // handle success
-        console.log(response);
+        // console.log(response);
         this.setState({ service: response.data });
       })
       .catch(function (error) {
