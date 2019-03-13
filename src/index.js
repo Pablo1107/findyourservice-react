@@ -1,10 +1,19 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
+import { Provider } from 'react-redux'
+// import rootReducer from './reducers'
 import 'bootstrap/dist/css/bootstrap.min.css';
 import Main from './components/Main/index.js';
 import * as serviceWorker from './serviceWorker';
 
-ReactDOM.render(<Main />, document.getElementById('root'));
+import store from './store.js'
+
+ReactDOM.render(
+  <Provider store={store}> 
+    <Main />
+  </Provider>,
+  document.getElementById('root')
+);
 
 if (module.hot) module.hot.accept();
 
