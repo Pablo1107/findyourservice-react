@@ -21,7 +21,7 @@ class Services extends Component {
   }
 
   fetchServices() {
-    axios.get('http://homestead.test/api/services', { crossdomain: true })
+    axios.get('http://homestead.test/api/services')
       .then((response) => {
         // handle success
         this.setState({ services: response.data });
@@ -50,15 +50,21 @@ class Services extends Component {
                   Create Service
                 </button>
               </Link>
-            </div> </div>
+            </div>
+          </div>
         </div>
 
         { services &&
           <Table services={services} match={match} />
         }
         
-        <Route path={`${match.url}/create`} component={Form} />
-        <Route path={`${match.url}/services/:id`} component={Service} />
+        <Route path={`${match.url}/create`}
+          render={(props) => <Form {...props} isEditing={false}/>}
+          />
+        <Route path={`${match.url}/services/:id/edit`}
+          render={(props) => <Form {...props} isEditing={true}/>}
+          />
+        <Route exact path={`${match.url}/services/:id`} component={Service} />
       </main>
     );
   }
