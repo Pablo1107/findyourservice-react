@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import FormGroup from './components/FormGroup/index.js'
 import TextArea from './components/TextArea/index.js'
 import validate from './validate.js'
+const axios = require('axios');
 
 class Form extends Component {
   constructor(props) {
@@ -13,7 +14,7 @@ class Form extends Component {
       formInputs: {
         title: {
           value: '',
-          placeholder: 'What is your name',
+          placeholder: 'What is your service?',
           valid: false,
           touched: false,
           validationRules: {
@@ -22,21 +23,102 @@ class Form extends Component {
         },
         description: {
           value: '',
+          placeholder: 'What does your service do?',
+          valid: false,
+          touched: false,
+          validationRules: {
+            minLength: 3
+          }
         },
-        // address: {
-        //   value: '',
-        // },
+        address: {
+          value: '',
+          placeholder: '',
+          valid: false,
+          touched: false,
+          validationRules: {
+            minLength: 3
+          }
+        },
         city: {
           value: '',
+          placeholder: '',
+          valid: false,
+          touched: false,
+          validationRules: {
+            minLength: 3
+          }
         },
         state: {
           value: '',
+          placeholder: '',
+          valid: false,
+          touched: false,
+          validationRules: {
+            minLength: 3
+          }
         },
         zipcode: {
           value: '',
+          placeholder: '',
+          valid: false,
+          touched: false,
+          validationRules: {
+            minLength: 3
+          }
         },
-      }
+      },
+
+      service: null,
     }
+
+    this.fetchService = this.fetchService.bind(this);
+    this.fillFormInputs = this.fillFormInputs.bind(this);
+  }
+
+  componentDidMount() {
+    this.fetchService();
+  }
+
+  fetchService() {
+    const { match } = this.props;
+
+    axios.get(`http://homestead.test/api/services/${match.params.id}`, { crossdomain: true })
+      .then((response) => {
+        // handle success
+        // console.log(response);
+        this.setState({ service: response.data });
+        this.fillFormInputs();
+      })
+      .catch(function (error) {
+        // handle error
+        console.log(error);
+      })
+      .then(function () {
+        // always executed
+      });
+  }
+
+  fillFormInputs() {
+    const { service } = this.state;
+
+    // this.setState({ formInputs: { title: { value: service.title } }});
+    this.state.formInputs.title.value = service.title;
+    this.state.formInputs.title.valid = true;
+    this.state.formInputs.description.value = service.description;
+    this.state.formInputs.description.valid = true;
+    this.state.formInputs.address.value = service.address;
+    this.state.formInputs.address.valid = true;
+    this.state.formInputs.city.value = service.city;
+    this.state.formInputs.city.valid = true;
+    this.state.formInputs.state.value = service.state;
+    this.state.formInputs.state.valid = true;
+    this.state.formInputs.zipcode.value = service.zipcode;
+    this.state.formInputs.zipcode.valid = true;
+    this.setState({ formIsValid: true });
+    this.forceUpdate();
+
+    console.log(this.state.formInputs);
+    
   }
 
   changeHandler = event => {
@@ -67,16 +149,59 @@ class Form extends Component {
   }
 
   formSubmitHandler = (event) => {
-    event.preventDefault();
+    const { formInputs, service } = this.state;
+    const { match, isEditing } = this.props;
 
+    event.preventDefault();
     console.dir(this.state.formInputs);
+
+    if(!isEditing) {
+      axios.post('http://homestead.test/api/services/', {
+          title: formInputs.title.value,
+          description: formInputs.description.value,
+          address: formInputs.address.value,
+          city: formInputs.city.value,
+          state: formInputs.state.value,
+          zipcode: formInputs.zipcode.value,
+          longitude: 0.0,
+          latitude: 0.0
+        })
+        .then(function (response) {
+          console.log(response);
+        })
+        .catch(function (error) {
+          console.log(error);
+        });
+    } else {
+      axios.patch(`http://homestead.test/api/services/${match.params.id}`, {
+          title: formInputs.title.value,
+          description: formInputs.description.value,
+          address: formInputs.address.value,
+          city: formInputs.city.value,
+          state: formInputs.state.value,
+          zipcode: formInputs.zipcode.value,
+          longitude: 0.0,
+          latitude: 0.0
+        })
+        .then(function (response) {
+          console.log(response);
+        })
+        .catch(function (error) {
+          console.log(error);
+        });
+    }
   }
 
   render() {
+    const { isEditing } = this.props;
+
     return (
       <div>
         <div className="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
-          <h1 className="h2">Create Service</h1>
+          { isEditing ?
+              <h1 className="h2">Edit Service</h1> :
+              <h1 className="h2">Create Service</h1>
+          }
         </div>
         <form>
           <FormGroup label="Title"
@@ -84,21 +209,24 @@ class Form extends Component {
             placeholder={this.state.formInputs.title.placeholder}
             value={this.state.formInputs.title.value}
             onChange={this.changeHandler}
-            touched={this.state.formInputs.title.touched}
-            valid={this.state.formInputs.title.valid}
+            touched={this.state.formInputs.title.touched ? 1 : 0}
+            valid={this.state.formInputs.title.valid ? 1 : 0}
           />
           <TextArea label="Description"
             name="description"
             placeholder={this.state.formInputs.description.placeholder}
             value={this.state.formInputs.description.value}
             onChange={this.changeHandler}
-            touched={this.state.formInputs.description.touched}
-            valid={this.state.formInputs.description.valid}
+            touched={this.state.formInputs.description.touched ? 1 : 0}
+            valid={this.state.formInputs.description.valid ? 1 : 0}
           />
           <div className="form-group">
             <label className="label">Address</label>
-            <input type="text" ref="autocomplete"
+            <input type="text"
               className="form-control"
+              name="address"
+              value={this.state.formInputs.address.value}
+              onChange={this.changeHandler}
               ></input>
             <input type="hidden" name="address"></input>
             <div className="invalid-feedback"></div>
@@ -108,30 +236,34 @@ class Form extends Component {
             placeholder={this.state.formInputs.city.placeholder}
             value={this.state.formInputs.city.value}
             onChange={this.changeHandler}
-            touched={this.state.formInputs.city.touched}
-            valid={this.state.formInputs.city.valid}
+            touched={this.state.formInputs.city.touched ? 1 : 0}
+            valid={this.state.formInputs.city.valid ? 1 : 0}
           />
           <FormGroup label="State"
             name="state"
             placeholder={this.state.formInputs.state.placeholder}
             value={this.state.formInputs.state.value}
             onChange={this.changeHandler}
-            touched={this.state.formInputs.state.touched}
-            valid={this.state.formInputs.state.valid}
-            />
+            touched={this.state.formInputs.state.touched ? 1 : 0}
+            valid={this.state.formInputs.state.valid ? 1 : 0}
+          />
           <FormGroup label="Zip Code"
             name="zipcode"
             placeholder={this.state.formInputs.zipcode.placeholder}
             value={this.state.formInputs.zipcode.value}
             onChange={this.changeHandler}
-            touched={this.state.formInputs.zipcode.touched}
-            valid={this.state.formInputs.zipcode.valid}
-            />
-          <input type="hidden" name="latitude" value=""></input>
-          <input type="hidden" name="longitude" value=""></input>
+            touched={this.state.formInputs.zipcode.touched ? 1 : 0}
+            valid={this.state.formInputs.zipcode.valid ? 1 : 0}
+          />
+          <input type="hidden"
+            name="latitude"
+            ></input>
+          <input type="hidden"
+            name="longitude"
+            ></input>
           <button className="btn btn-primary" onClick={this.formSubmitHandler}
             disabled={!this.state.formIsValid}>
-            Create
+            { isEditing ? "Edit" : "Create" }
           </button>
         </form>
       </div>
