@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { Link } from "react-router-dom";
 const axios = require('axios');
 
 class Service extends Component {
@@ -10,6 +11,7 @@ class Service extends Component {
     }
 
     this.fetchService = this.fetchService.bind(this);
+    this.editService = this.editService.bind(this);
   }
 
   componentDidMount() {
@@ -47,8 +49,13 @@ class Service extends Component {
       });
   }
 
+  editService() {
+    console.log("Edit service " + this.state.service.id);
+  }
+
   render() {
     const { service } = this.state;
+    const { match } = this.props;
 
     if(!service) return null;
 
@@ -56,16 +63,16 @@ class Service extends Component {
       <div>
         <div className="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
           <h1 className="h2">{ service.title }</h1>
-          {/* <div className="btn-toolbar mb-2 mb-md-0"> */}
-          {/*   <div className="btn-group mr-2"> */}
-          {/*     <form :action="'#/services/' + service.id + '/edit'"> */}
-          {/*       <input type="submit" className="btn btn-sm btn-outline-secondary" value="Edit"> */}
-          {/*     </form>  */}
-          {/*     <form @submit.prevent="$emit('delete', service.id)"> */}
-          {/*       <input type="submit" className="btn btn-danger btn-sm btn-outline-secondary" value="Delete"> */}
-          {/*     </form>  */}
-          {/*   </div>  */}
-          {/* </div> */}
+          <div className="btn-toolbar mb-2 mb-md-0">
+            <div className="btn-group mr-2">
+              <Link to={`${match.url}/edit`}>
+                <button type="submit" className="btn btn-sm btn-outline-secondary">Edit</button>
+              </Link>
+              <Link to={`${match.url}/delete`}>
+                <button type="submit" className="btn btn-danger btn-sm btn-outline-secondary">Delete</button>
+              </Link>
+            </div> 
+          </div>
         </div>
         <h1 className="h3">Description</h1>
         <p>{ service.description }</p> 
