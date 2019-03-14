@@ -83,7 +83,11 @@ class Form extends Component {
   }
 
   componentDidMount() {
-    this.fetchService();
+    const { isEditing } = this.props;
+
+    if(isEditing) {
+      this.fetchService();
+    }
   }
 
   fetchService() {
