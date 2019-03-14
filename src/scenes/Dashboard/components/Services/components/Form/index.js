@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import FormGroup from './components/FormGroup/index.js'
 import TextArea from './components/TextArea/index.js'
 import validate from './validate.js'
+import update from 'immutability-helper';
 const axios = require('axios');
 
 class Form extends Component {
@@ -103,26 +104,23 @@ class Form extends Component {
   }
 
   fillFormInputs() {
-    const { service } = this.state;
+    const { service, formValues } = this.state;
 
-    // this.setState({ formInputs: { title: { value: service.title } }});
-    this.state.formInputs.title.value = service.title;
-    this.state.formInputs.title.valid = true;
-    this.state.formInputs.description.value = service.description;
-    this.state.formInputs.description.valid = true;
-    this.state.formInputs.address.value = service.address;
-    this.state.formInputs.address.valid = true;
-    this.state.formInputs.city.value = service.city;
-    this.state.formInputs.city.valid = true;
-    this.state.formInputs.state.value = service.state;
-    this.state.formInputs.state.valid = true;
-    this.state.formInputs.zipcode.value = service.zipcode;
-    this.state.formInputs.zipcode.valid = true;
-    this.setState({ formIsValid: true });
-    this.forceUpdate();
+    for(const name in formValues) {
+      console.log(name + " " + service[name]);
+      this.setState({
+        formValues: update(
+          this.state.formValues, {$merge: { [name]: service[name] }}
+        ),
+        validForms: update(
+          this.state.validForms, {$merge: { [name]: true }}
+        ),
+        formIsValid: true
+      });
+    }
 
-    console.log(this.state.formInputs);
-    
+    console.log(this.state.formValues);
+
   }
 
   changeHandler = event => {
