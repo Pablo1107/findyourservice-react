@@ -81,6 +81,8 @@ class Form extends Component {
 
     this.fetchService = this.fetchService.bind(this);
     this.fillFormInputs = this.fillFormInputs.bind(this);
+    this.checkForm = this.checkForm.bind(this);
+    this.formSubmitHandler = this.formSubmitHandler.bind(this);
   }
 
   componentDidMount() {
@@ -89,6 +91,10 @@ class Form extends Component {
     if(isEditing) {
       this.fetchService();
     }
+  }
+
+  componentDidUpdate() {
+    this.checkForm();
   }
 
   async fetchService() {
@@ -121,6 +127,17 @@ class Form extends Component {
 
     console.log(this.state.formValues);
 
+  }
+
+  checkForm() {
+    const { validForms, formIsValid } = this.state;
+    let formValid = true;
+
+    for (const isKeyValid in validForms) {
+      formValid = validForms[isKeyValid] && formValid;
+    }
+
+    if(formIsValid !== formValid) this.setState({ formIsValid: formValid });
   }
 
   changeHandler = event => {
