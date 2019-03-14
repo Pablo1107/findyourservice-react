@@ -26,7 +26,7 @@ class Service extends Component {
       return false;
     }
 
-    if(service && service.id != match.params.id) {
+    if(service && service.id.toString() !== match.params.id) {
       this.fetchService();
     }
   }
