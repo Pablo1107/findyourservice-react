@@ -20,19 +20,13 @@ class Services extends Component {
     this.fetchServices();
   }
 
-  fetchServices() {
-    axios.get('http://homestead.test/api/services')
-      .then((response) => {
-        // handle success
-        this.setState({ services: response.data });
-      })
-      .catch(function (error) {
-        // handle error
-        console.log(error);
-      })
-      .then(function () {
-        // always executed
-      });
+  async fetchServices() {
+    try {
+      const response = await axios.get('http://homestead.test/api/services');
+      this.setState({ services: response.data });
+    } catch(error) {
+      console.log(error);
+    }
   }
 
   render() {
