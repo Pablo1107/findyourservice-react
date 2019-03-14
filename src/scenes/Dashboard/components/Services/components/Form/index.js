@@ -157,52 +157,38 @@ class Form extends Component {
     });
   }
 
-  formSubmitHandler = (event) => {
-    const { formInputs, service } = this.state;
-    const { match, isEditing } = this.props;
+  async formSubmitHandler(event) {
+    const { formValues } = this.state;
+    const { match, isEditing, history, updateServices } = this.props;
 
     event.preventDefault();
-    console.dir(this.state.formInputs);
 
     if(!isEditing) {
-      axios.post('http://homestead.test/api/services/', {
-          title: formInputs.title.value,
-          description: formInputs.description.value,
-          address: formInputs.address.value,
-          city: formInputs.city.value,
-          state: formInputs.state.value,
-          zipcode: formInputs.zipcode.value,
+      const response = await axios.post('http://homestead.test/api/services/',
+        {
+          ...formValues,
           longitude: 0.0,
           latitude: 0.0
-        })
-        .then(function (response) {
-          console.log(response);
-        })
-        .catch(function (error) {
-          console.log(error);
         });
+      console.log(response);
+      updateServices();
+      history.push('/admin');
     } else {
-      axios.patch(`http://homestead.test/api/services/${match.params.id}`, {
-          title: formInputs.title.value,
-          description: formInputs.description.value,
-          address: formInputs.address.value,
-          city: formInputs.city.value,
-          state: formInputs.state.value,
-          zipcode: formInputs.zipcode.value,
+      const response = await axios.patch(`http://homestead.test/api/services/${match.params.id}`,
+        {
+          ...formValues,
           longitude: 0.0,
           latitude: 0.0
-        })
-        .then(function (response) {
-          console.log(response);
-        })
-        .catch(function (error) {
-          console.log(error);
         });
+      console.log(response);
+      updateServices();
+      history.push(`/admin/services/${match.params.id}`);
     }
   }
 
   render() {
     const { isEditing } = this.props;
+    const { service } = this.state;
 
     return (
       <div>
