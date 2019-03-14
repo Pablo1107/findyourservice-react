@@ -31,22 +31,16 @@ class Service extends Component {
     }
   }
 
-  fetchService() {
+  async fetchService() {
     const { match } = this.props;
 
-    axios.get(`http://homestead.test/api/services/${match.params.id}`, { crossdomain: true })
-      .then((response) => {
-        // handle success
-        // console.log(response);
-        this.setState({ service: response.data });
-      })
-      .catch(function (error) {
-        // handle error
-        console.log(error);
-      })
-      .then(function () {
-        // always executed
-      });
+    try {
+      const response = await axios.get(`http://homestead.test/api/services/${match.params.id}`);
+      this.setState({ service: response.data });
+    } catch(errors) {
+      console.log(errors);
+    }
+
   }
 
   editService() {
