@@ -11,54 +11,61 @@ class Form extends Component {
     this.state = {
       formIsValid: false,
 
-      formInputs: {
+      formValues: {
+        title: '',
+        description: '',
+        address: '',
+        city: '',
+        state: '',
+        zipcode: '',
+      },
+
+      validForms: {
+        title: false,
+        description: false,
+        address: false,
+        city: false,
+        state: false,
+        zipcode: false,
+      },
+
+      formControls: {
         title: {
-          value: '',
           placeholder: 'What is your service?',
-          valid: false,
           touched: false,
           validationRules: {
             minLength: 3
           }
         },
         description: {
-          value: '',
           placeholder: 'What does your service do?',
-          valid: false,
           touched: false,
           validationRules: {
             minLength: 3
           }
         },
         address: {
-          value: '',
           placeholder: '',
-          valid: false,
           touched: false,
           validationRules: {
             minLength: 3
           }
         },
         city: {
-          value: '',
           placeholder: '',
-          valid: false,
           touched: false,
           validationRules: {
             minLength: 3
           }
         },
         state: {
-          value: '',
           placeholder: '',
-          valid: false,
           touched: false,
           validationRules: {
             minLength: 3
           }
         },
         zipcode: {
-          value: '',
           placeholder: '',
           valid: false,
           touched: false,
@@ -203,57 +210,59 @@ class Form extends Component {
               <h1 className="h2">Create Service</h1>
           }
         </div>
+        { (service || !isEditing) &&
         <form>
           <FormGroup label="Title"
             name="title"
-            placeholder={this.state.formInputs.title.placeholder}
-            value={this.state.formInputs.title.value}
+            placeholder={this.state.formControls.title.placeholder}
+            value={this.state.formValues.title}
             onChange={this.changeHandler}
-            touched={this.state.formInputs.title.touched ? 1 : 0}
-            valid={this.state.formInputs.title.valid ? 1 : 0}
+            touched={this.state.formControls.title.touched ? 1 : 0}
+            valid={this.state.validForms.title ? 1 : 0}
           />
           <TextArea label="Description"
             name="description"
-            placeholder={this.state.formInputs.description.placeholder}
-            value={this.state.formInputs.description.value}
+            placeholder={this.state.formControls.description.placeholder}
+            value={this.state.formValues.description}
             onChange={this.changeHandler}
-            touched={this.state.formInputs.description.touched ? 1 : 0}
-            valid={this.state.formInputs.description.valid ? 1 : 0}
+            touched={this.state.formControls.description.touched ? 1 : 0}
+            valid={this.state.formControls.description.valid ? 1 : 0}
           />
           <div className="form-group">
             <label className="label">Address</label>
             <input type="text"
               className="form-control"
               name="address"
-              value={this.state.formInputs.address.value}
+              value={this.state.formValues.address}
               onChange={this.changeHandler}
+              // TODO: Make a component for this to validate input.
               ></input>
             <input type="hidden" name="address"></input>
             <div className="invalid-feedback"></div>
           </div>
           <FormGroup label="City"
             name="city"
-            placeholder={this.state.formInputs.city.placeholder}
-            value={this.state.formInputs.city.value}
+            placeholder={this.state.formControls.city.placeholder}
+            value={this.state.formValues.city}
             onChange={this.changeHandler}
-            touched={this.state.formInputs.city.touched ? 1 : 0}
-            valid={this.state.formInputs.city.valid ? 1 : 0}
+            touched={this.state.formControls.city.touched ? 1 : 0}
+            valid={this.state.validForms.city ? 1 : 0}
           />
           <FormGroup label="State"
             name="state"
-            placeholder={this.state.formInputs.state.placeholder}
-            value={this.state.formInputs.state.value}
+            placeholder={this.state.formControls.state.placeholder}
+            value={this.state.formValues.state}
             onChange={this.changeHandler}
-            touched={this.state.formInputs.state.touched ? 1 : 0}
-            valid={this.state.formInputs.state.valid ? 1 : 0}
+            touched={this.state.formControls.state.touched ? 1 : 0}
+            valid={this.state.validForms.state ? 1 : 0}
           />
           <FormGroup label="Zip Code"
             name="zipcode"
-            placeholder={this.state.formInputs.zipcode.placeholder}
-            value={this.state.formInputs.zipcode.value}
+            placeholder={this.state.formControls.zipcode.placeholder}
+            value={this.state.formValues.zipcode}
             onChange={this.changeHandler}
-            touched={this.state.formInputs.zipcode.touched ? 1 : 0}
-            valid={this.state.formInputs.zipcode.valid ? 1 : 0}
+            touched={this.state.formControls.zipcode.touched ? 1 : 0}
+            valid={this.state.validForms.zipcode ? 1 : 0}
           />
           <input type="hidden"
             name="latitude"
@@ -266,6 +275,7 @@ class Form extends Component {
             { isEditing ? "Edit" : "Create" }
           </button>
         </form>
+        }
       </div>
     );
   }
