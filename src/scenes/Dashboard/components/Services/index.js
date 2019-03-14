@@ -53,12 +53,14 @@ class Services extends Component {
         }
         
         <Route path={`${match.url}/create`}
-          render={(props) => <Form {...props} isEditing={false}/>}
+          render={(props) => <Form {...props} isEditing={false} updateServices={this.fetchServices} />}
           />
         <Route path={`${match.url}/services/:id/edit`}
-          render={(props) => <Form {...props} isEditing={true}/>}
+          render={(props) => <Form {...props} isEditing={true} updateServices={this.fetchServices} />}
           />
-        <Route exact path={`${match.url}/services/:id`} component={Service} />
+        <Route exact path={`${match.url}/services/:id`}
+          render={(props) => <Service {...props} updateServices={this.fetchServices} />}
+          />
       </main>
     );
   }
