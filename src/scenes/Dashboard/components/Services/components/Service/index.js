@@ -11,7 +11,7 @@ class Service extends Component {
     }
 
     this.fetchService = this.fetchService.bind(this);
-    this.editService = this.editService.bind(this);
+    this.onDeleteService = this.onDeleteService.bind(this);
   }
 
   componentDidMount() {
@@ -43,8 +43,18 @@ class Service extends Component {
 
   }
 
-  editService() {
-    console.log("Edit service " + this.state.service.id);
+  async onDeleteService() {
+    const { match, history, updateServices } = this.props;
+
+    try {
+      await axios.delete(
+        `http://homestead.test/api/services/${match.params.id}`);
+      updateServices();
+      history.push('/admin');
+    } catch(errors) {
+      console.log(errors);
+    }
+
   }
 
   render() {
@@ -60,11 +70,14 @@ class Service extends Component {
           <div className="btn-toolbar mb-2 mb-md-0">
             <div className="btn-group mr-2">
               <Link to={`${match.url}/edit`}>
-                <button type="submit" className="btn btn-sm btn-outline-secondary">Edit</button>
+                <button type="submit"
+                  className="btn btn-sm btn-outline-secondary">Edit</button>
               </Link>
-              <Link to={`${match.url}/delete`}>
-                <button type="submit" className="btn btn-danger btn-sm btn-outline-secondary">Delete</button>
-              </Link>
+              <button type="submit"
+                className="btn btn-danger btn-sm btn-outline-secondary"
+                onClick={this.onDeleteService}>
+                Delete
+              </button>
             </div> 
           </div>
         </div>
