@@ -141,29 +141,19 @@ class Form extends Component {
   }
 
   changeHandler = event => {
+    const { formValues, validForms, formControls } = this.state;
     const name = event.target.name;
     const value = event.target.value;
 
-    const updatedInputs = {
-      ...this.state.formInputs
-    };
-    const updatedFormElement = {
-      ...updatedInputs[name]
-    };
-    updatedFormElement.value = value;
+    const updatedFormElement = { ...formControls[name] };
     updatedFormElement.touched = true;
-    updatedFormElement.valid = validate(value, updatedFormElement.validationRules);
 
-    updatedInputs[name] = updatedFormElement;
-
-    let formIsValid = true;
-    for (let inputIdentifier in updatedInputs) {
-      formIsValid = updatedInputs[inputIdentifier].valid && formIsValid;
-    }
+    let valid = validate(value, updatedFormElement.validationRules);
 
     this.setState({
-      formInputs: updatedInputs,
-      formIsValid
+      formValues: update(formValues, {$merge: { [name]: value }}),
+      validForms: update(validForms, {$merge: { [name]: valid }}),
+      formControls: update(formControls, {$merge: { [name]: updatedFormElement }}),
     });
   }
 
