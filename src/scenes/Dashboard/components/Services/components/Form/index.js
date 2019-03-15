@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import FormGroup from './components/FormGroup/index.js'
 import TextArea from './components/TextArea/index.js'
-import validate from './validate.js'
+import validate from 'common/validate.js'
 import update from 'immutability-helper';
 const axios = require('axios');
 
