@@ -42,14 +42,14 @@ class Form extends Component {
           placeholder: 'What does your service do?',
           touched: false,
           validationRules: {
-            minLength: 3
+            minLength: 10
           }
         },
         address: {
           placeholder: '',
           touched: false,
           validationRules: {
-            minLength: 3
+            minLength: 5
           }
         },
         city: {
@@ -71,7 +71,7 @@ class Form extends Component {
           valid: false,
           touched: false,
           validationRules: {
-            minLength: 3
+            minLength: 4
           }
         },
       },
