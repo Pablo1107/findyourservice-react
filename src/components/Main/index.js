@@ -5,8 +5,14 @@ import Navbar from '../Navbar/index.js'
 import Home from '../../scenes/Home/index.js'
 import Dashboard from '../../scenes/Dashboard/index.js'
 import Login from '../../scenes/Login/index.js'
+import { connect } from 'react-redux';
+import { fetchAuthUser } from 'actions/authActions.js';
 
 class Main extends Component {
+  componentDidMount() {
+    this.props.fetchAuthUser();
+  }
+
   render() {
     return (
       <div className="App">
@@ -23,4 +29,4 @@ class Main extends Component {
   }
 }
 
-export default Main;
+export default connect(null, { fetchAuthUser })(Main);
