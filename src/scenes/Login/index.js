@@ -6,10 +6,20 @@ const axios = require('axios');
 const store = require('store')
 
 class Login extends Component {
-  // constructor(props) {
-  //   super(props);
-  // }
-  //
+  componentDidMount() {
+    this.getAuthToken();
+  }
+
+  getAuthToken() {
+    // store.clearAll();
+    const auth_token = store.get('AUTH_TOKEN');;
+    if(auth_token) {
+      axios.defaults.headers.common['Authorization'] = 
+        `Bearer ${auth_token.token}`;
+      this.props.history.push('/admin');
+    }
+  }
+
   render() {
     return (
       <div className='form-page'>
@@ -85,7 +95,6 @@ class LoginForm extends Component {
       {
         ...formValues,
       });
-    console.log(response);
     store.set('AUTH_TOKEN', response.data);
     history.push('/admin');
   }
