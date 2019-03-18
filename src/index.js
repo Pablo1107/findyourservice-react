@@ -6,7 +6,10 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import Main from './components/Main/index.js';
 import * as serviceWorker from './serviceWorker';
 
-import store from './store.js'
+import store from './store.js';
+
+import axios from 'axios';
+axios.defaults.baseURL = 'http://homestead.test';
 
 ReactDOM.render(
   <Provider store={store}> 
