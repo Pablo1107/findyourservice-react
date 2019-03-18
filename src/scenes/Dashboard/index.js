@@ -1,31 +1,33 @@
 import React, { Component } from 'react';
 import Sidebar from './components/Sidebar/index.js'
 import Services from './components/Services/index.js'
-// import { connect } from 'react-redux';
-// import { fetchAuthStatus } from 'actions/authActions.js';
+import { connect } from 'react-redux';
 const store = require('store')
-const axios = require('axios');
 
 class Dashboard extends Component {
   componentDidMount() {
-    // this.props.fetchAuthStatus();
-
-    this.getAuthToken();
+    this.checkIfAuthenticated();
   }
 
-  getAuthToken() {
-    // store.clearAll();
-    const auth_token = store.get('AUTH_TOKEN');;
-    if(auth_token) {
-      axios.defaults.headers.common['Authorization'] = 
-        `Bearer ${auth_token.token}`;
-    } else {
+  componentDidUpdate(prevProps) {
+    const { logout, history } = this.props;
+    if((logout !== prevProps.logout) && logout) {
+      history.push('/');
+    }
+  }
+
+  checkIfAuthenticated() {
+    const auth_token = store.get('AUTH_TOKEN');
+    if(!auth_token) {
       this.props.history.push('/login');
     }
   }
 
   render() {
-    // console.log(this.props.posts);
+    const { authenticated } = this.props;
+
+    if(!authenticated) return null;
+
     return (
       <div className="App">
         <Sidebar />
@@ -36,9 +38,10 @@ class Dashboard extends Component {
   }
 }
 
-export default Dashboard;
-// const mapStateToProps = state => ({
-//     posts: state.user,
-// });
-//
-// export default connect(mapStateToProps, { fetchAuthStatus })(Dashboard);
+const mapStateToProps = state => ({
+  user: state.auth.user,
+  authenticated: state.auth.authenticated,
+  logout: state.auth.logout,
+});
+
+export default connect(mapStateToProps)(Dashboard);
