@@ -2,20 +2,22 @@ import React, { Component } from 'react';
 import './index.css';
 import validate from 'common/validate.js'
 import update from 'immutability-helper';
-const axios = require('axios');
-const store = require('store')
+import { connect } from 'react-redux';
+import { loginUser } from 'actions/authActions.js';
 
 class Login extends Component {
   componentDidMount() {
-    this.getAuthToken();
+    this.checkIfAuthenticated();
   }
 
-  getAuthToken() {
-    // store.clearAll();
-    const auth_token = store.get('AUTH_TOKEN');;
-    if(auth_token) {
-      axios.defaults.headers.common['Authorization'] = 
-        `Bearer ${auth_token.token}`;
+  componentDidUpdate(prevProps) {
+    if(this.props.authenticated !== prevProps.authenticated) {
+      this.checkIfAuthenticated();
+    }
+  }
+
+  checkIfAuthenticated() {
+    if(this.props.authenticated) {
       this.props.history.push('/admin');
     }
   }
@@ -23,7 +25,8 @@ class Login extends Component {
   render() {
     return (
       <div className='form-page'>
-        <LoginForm history={this.props.history}/>
+        <LoginForm history={this.props.history}
+          loginUser={this.props.loginUser} />
       </div>
     );
   }
@@ -85,17 +88,14 @@ class LoginForm extends Component {
     });
   }
 
-  async formSubmitHandler(event) {
+  formSubmitHandler(event) {
     const { formValues } = this.state;
     const { history } = this.props;
 
     event.preventDefault();
 
-    const response = await axios.post('http://homestead.test/api/login/',
-      {
-        ...formValues,
-      });
-    store.set('AUTH_TOKEN', response.data);
+    console.log(this.props);
+    this.props.loginUser(formValues.email, formValues.password);
     history.push('/admin');
   }
 
@@ -133,4 +133,9 @@ class LoginForm extends Component {
 
 }
 
-export default Login;
+// export default Login;
+const mapStateToProps = state => ({
+  authenticated: state.auth.authenticated,
+});
+
+export default connect(mapStateToProps, { loginUser })(Login);
