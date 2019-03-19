@@ -84,17 +84,17 @@ class Service extends Component {
         <h1 className="h3">Description</h1>
         <p>{ service.description }</p> 
         <h1 className="h3">Address</h1>
-        { service.address }
+        <p>{ service.address }</p>
         <h1 className="h3">City</h1>
-        { service.city }
+        <p>{ service.city }</p>
         <h1 className="h3">State</h1>
-        { service.state }
+        <p>{ service.state }</p>
         <h1 className="h3">Zipcode</h1>
-        { service.zipcode }
+        <p>{ service.zipcode }</p>
         <h1 className="h3">Longitude</h1>
-        { service.longitude }
+        <p>{ service.longitude }</p>
         <h1 className="h3">Latitude</h1>
-        { service.latitude }
+        <p>{ service.latitude }</p>
       </div>
     );
   }
