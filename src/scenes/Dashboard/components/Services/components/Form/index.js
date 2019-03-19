@@ -3,11 +3,14 @@ import FormGroup from './components/FormGroup/index.js'
 import TextArea from './components/TextArea/index.js'
 import validate from 'common/validate.js'
 import update from 'immutability-helper';
+import { GoogleApiWrapper } from 'google-maps-react';
 const axios = require('axios');
 
 class Form extends Component {
   constructor(props) {
     super(props);
+
+    this.autocompleteInput = React.createRef();
 
     this.state = {
       formIsValid: false,
@@ -19,6 +22,8 @@ class Form extends Component {
         city: '',
         state: '',
         zipcode: '',
+        latitude: 0.0,
+        longitude: 0.0,
       },
 
       validForms: {
@@ -28,51 +33,57 @@ class Form extends Component {
         city: false,
         state: false,
         zipcode: false,
+        latitude: true,
+        longitude: true,
+      },
+
+      validationRules: {
+        title: {
+          minLength: 3
+        },
+        description: {
+          minLength: 10
+        },
+        address: {
+          minLength: 5
+        },
+        city: {
+          minLength: 3
+        },
+        state: {
+          minLength: 3
+        },
+        zipcode: {
+          minLength: 4
+        },
+        latitude: {},
+        longitude: {},
       },
 
       formControls: {
         title: {
           placeholder: 'What is your service?',
           touched: false,
-          validationRules: {
-            minLength: 3
-          }
         },
         description: {
           placeholder: 'What does your service do?',
           touched: false,
-          validationRules: {
-            minLength: 10
-          }
         },
         address: {
           placeholder: '',
           touched: false,
-          validationRules: {
-            minLength: 5
-          }
         },
         city: {
           placeholder: '',
           touched: false,
-          validationRules: {
-            minLength: 3
-          }
         },
         state: {
           placeholder: '',
           touched: false,
-          validationRules: {
-            minLength: 3
-          }
         },
         zipcode: {
           placeholder: '',
-          valid: false,
           touched: false,
-          validationRules: {
-            minLength: 4
-          }
         },
       },
 
@@ -83,6 +94,7 @@ class Form extends Component {
     this.fillFormInputs = this.fillFormInputs.bind(this);
     this.checkForm = this.checkForm.bind(this);
     this.formSubmitHandler = this.formSubmitHandler.bind(this);
+    this.initAutoComplete = this.initAutoComplete.bind(this);
   }
 
   componentDidMount() {
@@ -91,6 +103,8 @@ class Form extends Component {
     if(isEditing) {
       this.fetchService();
     }
+
+    this.initAutoComplete();
   }
 
   componentDidUpdate() {
@@ -141,14 +155,14 @@ class Form extends Component {
   }
 
   changeHandler = event => {
-    const { formValues, validForms, formControls } = this.state;
+    const { formValues, validForms, validationRules, formControls } = this.state;
     const name = event.target.name;
     const value = event.target.value;
 
     const updatedFormElement = { ...formControls[name] };
     updatedFormElement.touched = true;
 
-    let valid = validate(value, updatedFormElement.validationRules);
+    const valid = validate(value, validationRules[name]);
 
     this.setState({
       formValues: update(formValues, {$merge: { [name]: value }}),
@@ -164,27 +178,108 @@ class Form extends Component {
     event.preventDefault();
 
     if(!isEditing) {
-      const response = await axios.post('http://homestead.test/api/services/',
+      await axios.post('/api/services/',
         {
           ...formValues,
-          longitude: 0.0,
-          latitude: 0.0
         });
-      console.log(response);
+      // console.log(response);
       updateServices();
       history.push('/admin');
     } else {
-      const response = await axios.patch(`http://homestead.test/api/services/${match.params.id}`,
+      await axios.patch(`/api/services/${match.params.id}`,
         {
           ...formValues,
-          longitude: 0.0,
-          latitude: 0.0
         });
-      console.log(response);
+      // console.log(response);
       updateServices();
       history.push(`/admin/services/${match.params.id}`);
     }
   }
+
+	initAutoComplete() {
+    const { validationRules } = this.state;
+    const { google } = this.props;
+
+		this.autocomplete = new google.maps.places.Autocomplete(
+			this.autocompleteInput.current,
+			{types: ['geocode']}
+		);
+		this.autocomplete.addListener('place_changed', () => {
+      // this.setState({
+      //   formValues: update(formValues, {$merge: {
+      //     address = '',
+      //     city = '',
+      //     state = '',
+      //     zipcode = '',
+      //     latitude = 0.0,
+      //     longitude = 0.0,
+      //   }}),
+      //   validForms: update(validForms, {$merge: {
+      //     address: false,
+      //     city: false,
+      //     state: false,
+      //     zipcode: false,
+      //   }}),
+      // });
+			const componentForm = {
+				'administrative_area_level_1': 'state',
+				'locality': 'city',
+				'postal_code': 'zipcode',
+			}
+			const place = this.autocomplete.getPlace();
+			const ac = place.address_components;
+
+      let filledFormValues = {};
+      let validFormValues = {};
+      
+      filledFormValues = {
+        ...filledFormValues,
+        address: place.name,
+        latitude: place.geometry.location.lat(),
+        longitude: place.geometry.location.lng(),
+      };
+
+      if(filledFormValues.address) validFormValues.address = true;
+
+			for (let i = 0; i < ac.length; i++) {
+				const addressType = ac[i].types[0];
+        const key = componentForm[addressType];
+				const value = ac[i]['long_name'];
+        // console.log(addressType + ' ' + value);
+				if(key) {
+          // console.log(key + ': ' + value);
+          filledFormValues = {
+            ...filledFormValues,
+            [key]: value,
+          }
+          validFormValues = {
+            ...validFormValues,
+            [key]: validate(value, validationRules[key]),
+          }
+				} else if(addressType === 'postal_code_suffix') {
+          const zip = filledFormValues.zipcode;
+          filledFormValues = {
+            ...filledFormValues,
+            zipcode: zip ? zip + value : value,
+          }
+				}
+			}
+
+      if(!filledFormValues.city && filledFormValues.state) {
+        filledFormValues.city = filledFormValues.state;
+        validFormValues.city = true;
+      }
+
+      this.setState({
+        formValues: update(this.state.formValues, {$merge: {
+          ...filledFormValues
+        }}),
+        validForms: update(this.state.validForms, {$merge: {
+          ...validFormValues,
+        }}),
+      });
+		});
+	}
 
   render() {
     const { isEditing } = this.props;
@@ -216,18 +311,13 @@ class Form extends Component {
             touched={this.state.formControls.description.touched ? 1 : 0}
             valid={this.state.formControls.description.valid ? 1 : 0}
           />
-          <div className="form-group">
-            <label className="label">Address</label>
-            <input type="text"
-              className="form-control"
-              name="address"
-              value={this.state.formValues.address}
-              onChange={this.changeHandler}
-              // TODO: Make a component for this to validate input.
-              ></input>
-            <input type="hidden" name="address"></input>
-            <div className="invalid-feedback"></div>
-          </div>
+          <FormGroup label="Address"
+            ref={this.autocompleteInput}
+            name="address"
+            onChange={this.changeHandler}
+            touched={this.state.formControls.address.touched ? 1 : 0}
+            valid={1}
+          />
           <FormGroup label="City"
             name="city"
             placeholder={this.state.formControls.city.placeholder}
@@ -269,4 +359,6 @@ class Form extends Component {
   }
 }
 
-export default Form;
+export default GoogleApiWrapper({
+    apiKey: "AIzaSyB_nx2VoioGqC2ZEOZ296tQT6jYsh_5y8M"
+})(Form);
