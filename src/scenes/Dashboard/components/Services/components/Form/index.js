@@ -102,9 +102,10 @@ class Form extends Component {
 
     if(isEditing) {
       this.fetchService();
+    } else {
+      this.initAutoComplete();
     }
 
-    this.initAutoComplete();
   }
 
   componentDidUpdate() {
@@ -127,7 +128,7 @@ class Form extends Component {
     const { service, formValues } = this.state;
 
     for(const name in formValues) {
-      console.log(name + " " + service[name]);
+      // console.log(name + " " + service[name]);
       this.setState({
         formValues: update(
           this.state.formValues, {$merge: { [name]: service[name] }}
@@ -138,6 +139,10 @@ class Form extends Component {
         formIsValid: true
       });
     }
+
+    this.autocompleteInput.current.value = service.address;
+
+    this.initAutoComplete();
 
     console.log(this.state.formValues);
 
@@ -186,11 +191,11 @@ class Form extends Component {
       updateServices();
       history.push('/admin');
     } else {
-      await axios.patch(`/api/services/${match.params.id}`,
+      const response = await axios.patch(`/api/services/${match.params.id}`,
         {
           ...formValues,
         });
-      // console.log(response);
+      console.log(response);
       updateServices();
       history.push(`/admin/services/${match.params.id}`);
     }
@@ -342,12 +347,6 @@ class Form extends Component {
             touched={this.state.formControls.zipcode.touched ? 1 : 0}
             valid={this.state.validForms.zipcode ? 1 : 0}
           />
-          <input type="hidden"
-            name="latitude"
-            ></input>
-          <input type="hidden"
-            name="longitude"
-            ></input>
           <button className="btn btn-primary" onClick={this.formSubmitHandler}
             disabled={!this.state.formIsValid}>
             { isEditing ? "Edit" : "Create" }
