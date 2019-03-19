@@ -74,7 +74,7 @@ class Service extends Component {
                   className="btn btn-sm btn-outline-secondary">Edit</button>
               </Link>
               <button type="submit"
-                className="btn btn-danger btn-sm btn-outline-secondary"
+                className="btn btn-danger btn-sm"
                 onClick={this.onDeleteService}>
                 Delete
               </button>

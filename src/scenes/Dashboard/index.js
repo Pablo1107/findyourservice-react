@@ -29,7 +29,7 @@ class Dashboard extends Component {
     if(!authenticated) return null;
 
     return (
-      <div className="App">
+      <div className="App" style={{ fontSize: ".875rem" }} >
         <Sidebar />
         <Services match={this.props.match}/>
 

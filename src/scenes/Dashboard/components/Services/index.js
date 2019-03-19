@@ -3,7 +3,18 @@ import Table from './components/Table/index.js'
 import Service from './components/Service/index.js'
 import Form from './components/Form/index.js'
 import { Route, Link } from "react-router-dom";
+import styled from 'styled-components';
 const axios = require('axios');
+
+const Main = styled.main`
+  padding-top: 133px;
+
+  @media (min-width: 768px) {
+    & {
+      padding-top: 48px; /* Space for fixed navbar */
+    }
+  }
+`
 
 class Services extends Component {
   constructor(props) {
@@ -34,7 +45,7 @@ class Services extends Component {
     const { match } = this.props;
 
     return (
-      <main role="main" className="col-md-9 ml-sm-auto col-lg-10 px-4">
+      <Main role="main" className="col-md-9 ml-sm-auto col-lg-10 px-4">
         <div className="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
           <h1 className="h2">Dashboard</h1>
           <div className="btn-toolbar mb-2 mb-md-0">
@@ -61,7 +72,7 @@ class Services extends Component {
         <Route exact path={`${match.url}/services/:id`}
           render={(props) => <Service {...props} updateServices={this.fetchServices} />}
           />
-      </main>
+      </Main>
     );
   }
 }
