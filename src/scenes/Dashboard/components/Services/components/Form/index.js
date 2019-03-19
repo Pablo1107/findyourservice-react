@@ -294,7 +294,7 @@ class Form extends Component {
           }
         </div>
         { (service || !isEditing) &&
-        <form>
+        <form style={{ marginBottom: '20px' }} >
           <FormGroup label="Title"
             name="title"
             placeholder={this.state.formControls.title.placeholder}
