@@ -49,10 +49,20 @@ const Navbar = (props) =>
     <Search className="form-control form-control-dark w-100" type="text" placeholder="Search" aria-label="Search"></Search>
     <ul className="navbar-nav px-3">
       <li className="nav-item text-nowrap">
-        <LinkButton className="nav-link"
-          onClick={props.logoutUser}>Sign out</LinkButton>
+        { props.authenticated ?
+          <LinkButton className="nav-link"
+            onClick={props.logoutUser}>Log out</LinkButton> :
+          <Link className="nav-link"
+            to="/login">Login</Link>
+        }
       </li>
     </ul>
   </nav>
 
-export default connect(null, { logoutUser })(Navbar);
+const mapStateToProps = state => ({
+  user: state.auth.user,
+  authenticated: state.auth.authenticated,
+  logout: state.auth.logout,
+});
+
+export default connect(mapStateToProps, { logoutUser })(Navbar);
