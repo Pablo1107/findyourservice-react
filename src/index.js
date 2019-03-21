@@ -1,6 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import { Provider } from 'react-redux'
+import { BrowserRouter as Router } from "react-router-dom";
 // import rootReducer from './reducers'
 import 'bootstrap/dist/css/bootstrap.min.css';
 import Main from './components/Main/index.js';
@@ -13,7 +14,9 @@ axios.defaults.baseURL = 'http://homestead.test';
 
 ReactDOM.render(
   <Provider store={store}> 
-    <Main />
+    <Router>
+      <Main />
+    </Router>
   </Provider>,
   document.getElementById('root')
 );

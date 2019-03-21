@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { BrowserRouter as Router, Route } from "react-router-dom";
+import { Route, withRouter } from "react-router-dom";
 import Navbar from '../Navbar/index.js'
 import Home from '../../scenes/Home/index.js'
 import Dashboard from '../../scenes/Dashboard/index.js'
@@ -96,27 +96,25 @@ class Main extends Component {
 
   render() {
     return (
-      <Router>
-        <div className="App">
-          <Navbar changeHandler={this.searchChangeHandler}
-            onSearch={this.onSearch}
-            userLocation={this.state.userLocation} />
-          <div>
-            <Route path="/" exact render={(props) =>
-                <Home {...props} services={this.state.services}
-                  watchLocation={this.watchLocation}/>
-            }/>
-            <Route path="/admin" render={(props) =>
-                <Dashboard{...props} services={this.state.services}
-                  watchLocation={this.watchLocation}
-                  updateServices={this.fetchServices} />
-            }/>
-            <Route path="/login" component={Login} />
-          </div>
+      <div className="App">
+        <Navbar changeHandler={this.searchChangeHandler}
+          onSearch={this.onSearch}
+          userLocation={this.state.userLocation} />
+        <div>
+          <Route path="/" exact render={(props) =>
+              <Home {...props} services={this.state.services}
+                watchLocation={this.watchLocation}/>
+          }/>
+          <Route path="/admin" render={(props) =>
+              <Dashboard{...props} services={this.state.services}
+                watchLocation={this.watchLocation}
+                updateServices={this.fetchServices} />
+          }/>
+          <Route path="/login" component={Login} />
         </div>
-      </Router>
+      </div>
     );
   }
 }
 
-export default connect(null, { fetchAuthUser })(Main);
+export default connect(null, { fetchAuthUser })(withRouter(Main));
