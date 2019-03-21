@@ -99,7 +99,8 @@ class Main extends Component {
       <Router>
         <div className="App">
           <Navbar changeHandler={this.searchChangeHandler}
-            onSearch={this.onSearch} />
+            onSearch={this.onSearch}
+            userLocation={this.state.userLocation} />
           <div>
             <Route path="/" exact render={(props) =>
                 <Home {...props} services={this.state.services}

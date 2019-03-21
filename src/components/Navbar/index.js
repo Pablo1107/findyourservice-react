@@ -59,13 +59,16 @@ const Navbar = (props) =>
         placeholder="Search" aria-label="Search"></Search>
       <select name="radius" onChange={props.changeHandler} style={{ width: '120px', marginLeft: '10px' }}>
         <option value={0}>Anywhere</option>
-        <option value={1}>1km</option>
-        <option value={2}>2km</option>
-        <option value={5}>5km</option>
-        <option value={10}>10km</option>
-        <option value={25}>25km</option>
-        <option value={50}>50km</option>
-        <option value={100}>100km</option>
+        { Object.keys(props.userLocation).length !== 0 && [
+            <option value={1}>1km</option>,
+            <option value={2}>2km</option>,
+            <option value={5}>5km</option>,
+            <option value={10}>10km</option>,
+            <option value={25}>25km</option>,
+            <option value={50}>50km</option>,
+            <option value={100}>100km</option>
+          ]
+        }
       </select>
     </SearchForm>
     <ul className="navbar-nav px-3">
