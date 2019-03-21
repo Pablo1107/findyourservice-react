@@ -105,7 +105,10 @@ class Main extends Component {
                 <Home {...props} services={this.state.services}
                   watchLocation={this.watchLocation}/>
             }/>
-            <Route path="/admin" component={Dashboard} />
+            <Route path="/admin" render={(props) =>
+                <Dashboard{...props} services={this.state.services}
+                  watchLocation={this.watchLocation}/>
+            }/>
             <Route path="/login" component={Login} />
           </div>
         </div>

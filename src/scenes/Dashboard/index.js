@@ -24,14 +24,16 @@ class Dashboard extends Component {
   }
 
   render() {
-    const { authenticated } = this.props;
+    const { authenticated, services, watchLocation } = this.props;
 
     if(!authenticated) return null;
 
     return (
       <div className="App" style={{ fontSize: ".875rem" }} >
         <Sidebar />
-        <Services match={this.props.match}/>
+        <Services match={this.props.match}
+          services={services}
+          watchLocation={watchLocation}/>
 
       </div>
     );

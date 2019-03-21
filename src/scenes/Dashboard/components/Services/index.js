@@ -17,32 +17,12 @@ const Main = styled.main`
 `
 
 class Services extends Component {
-  constructor(props) {
-    super(props);
-
-    this.state = {
-      services: null,
-    }
-
-    this.fetchServices = this.fetchServices.bind(this);
-  }
-
   componentDidMount() {
-    this.fetchServices();
-  }
-
-  async fetchServices() {
-    try {
-      const response = await axios.get('http://homestead.test/api/services');
-      this.setState({ services: response.data });
-    } catch(error) {
-      console.log(error);
-    }
+    this.props.watchLocation();
   }
 
   render() {
-    const { services } = this.state;
-    const { match } = this.props;
+    const { match, services } = this.props;
 
     return (
       <Main role="main" className="col-md-9 ml-sm-auto col-lg-10 px-4">
