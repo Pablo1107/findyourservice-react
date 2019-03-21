@@ -34,7 +34,7 @@ class Main extends Component {
     const newLoc = this.state.userLocation; const oldLoc = prevState.userLocation;
     const newRadius = this.state.radius; const oldRadius = prevState.radius;
 
-    if(oldLoc.lat !== newLoc.lng && oldLoc.lng !== newLoc.lng ||
+    if((oldLoc.lat !== newLoc.lng && oldLoc.lng !== newLoc.lng) ||
       oldRadius !== newRadius) {
       this.fetchServices();
     }
@@ -108,7 +108,8 @@ class Main extends Component {
             }/>
             <Route path="/admin" render={(props) =>
                 <Dashboard{...props} services={this.state.services}
-                  watchLocation={this.watchLocation}/>
+                  watchLocation={this.watchLocation}
+                  updateServices={this.fetchServices} />
             }/>
             <Route path="/login" component={Login} />
           </div>

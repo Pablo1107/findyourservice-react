@@ -4,7 +4,6 @@ import Service from './components/Service/index.js'
 import Form from './components/Form/index.js'
 import { Route, Link } from "react-router-dom";
 import styled from 'styled-components';
-const axios = require('axios');
 
 const Main = styled.main`
   padding-top: 133px;
@@ -22,7 +21,7 @@ class Services extends Component {
   }
 
   render() {
-    const { match, services } = this.props;
+    const { match, services, updateServices } = this.props;
 
     return (
       <Main role="main" className="col-md-9 ml-sm-auto col-lg-10 px-4">
@@ -44,13 +43,13 @@ class Services extends Component {
         }
         
         <Route path={`${match.url}/create`}
-          render={(props) => <Form {...props} isEditing={false} updateServices={this.fetchServices} />}
+          render={(props) => <Form {...props} isEditing={false} updateServices={updateServices} />}
           />
         <Route path={`${match.url}/services/:id/edit`}
-          render={(props) => <Form {...props} isEditing={true} updateServices={this.fetchServices} />}
+          render={(props) => <Form {...props} isEditing={true} updateServices={updateServices} />}
           />
         <Route exact path={`${match.url}/services/:id`}
-          render={(props) => <Service {...props} updateServices={this.fetchServices} />}
+          render={(props) => <Service {...props} updateServices={updateServices} />}
           />
       </Main>
     );

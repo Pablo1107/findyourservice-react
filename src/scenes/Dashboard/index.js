@@ -24,7 +24,7 @@ class Dashboard extends Component {
   }
 
   render() {
-    const { authenticated, services, watchLocation } = this.props;
+    const { authenticated, services, watchLocation, updateServices } = this.props;
 
     if(!authenticated) return null;
 
@@ -33,6 +33,7 @@ class Dashboard extends Component {
         <Sidebar />
         <Services match={this.props.match}
           services={services}
+          updateServices={updateServices}
           watchLocation={watchLocation}/>
 
       </div>
