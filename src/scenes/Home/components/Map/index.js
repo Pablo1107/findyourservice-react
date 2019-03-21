@@ -22,7 +22,7 @@ class Map extends Component {
 			const mapRef = this.refs.map;
       const node = ReactDOM.findDOMNode(mapRef);
 
-			let zoom = 14;
+			let zoom = 12;
       let lat = -34.58;
       let lng = -58.44;
       const center = new maps.LatLng(lat, lng);
