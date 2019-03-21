@@ -21,7 +21,7 @@ class Services extends Component {
   }
 
   render() {
-    const { match, services, updateServices } = this.props;
+    const { match, services, updateServices, auth } = this.props;
 
     return (
       <Main role="main" className="col-md-9 ml-sm-auto col-lg-10 px-4">
@@ -39,7 +39,7 @@ class Services extends Component {
         </div>
 
         { services &&
-          <Table services={services} match={match} />
+          <Table services={services} match={match} auth={auth} />
         }
         
         <Route path={`${match.url}/create`}

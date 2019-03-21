@@ -1,7 +1,7 @@
 import React from 'react';
 import { Link } from "react-router-dom";
 
-const Table = ({ services, match }) =>
+const Table = ({ services, match, auth }) =>
   <div>
     <h2>Services</h2>
     <div className="table-responsive">
@@ -17,13 +17,22 @@ const Table = ({ services, match }) =>
           {services.map(item =>
             <tr key={item.id}>
               <td>
-                <Link to={`${match.url}/services/${item.id}`}>{item.id}</Link>
+                { auth ?
+                    <Link to={`/admin/services/${item.id}`}>{item.id}</Link> :
+                    `${item.id}`
+                }
               </td>
               <td>
-                <Link to={`${match.url}/services/${item.id}`}>{item.title}</Link>
+                { auth ?
+                    <Link to={`/admin/services/${item.id}`}>{item.title}</Link> :
+                    `${item.title}`
+                }
               </td>
               <td>
-                <Link to={`${match.url}/services/${item.id}`}>{item.city}</Link>
+                { auth ?
+                    <Link to={`/admin/services/${item.id}`}>{item.city}</Link> :
+                    `${item.city}`
+                }
               </td>
             </tr>
           )}

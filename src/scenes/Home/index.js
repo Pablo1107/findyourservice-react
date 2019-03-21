@@ -3,6 +3,7 @@ import Table from '../Dashboard/components/Services/components/Table/index.js'
 import { InfoWindow, Marker, GoogleApiWrapper } from 'google-maps-react';
 import Map from './components/Map/'
 import styled from 'styled-components'
+import { connect } from 'react-redux';
 
 const Box = styled.div`
   height: calc(100vh - 48px);
@@ -22,7 +23,7 @@ class Home extends Component {
   }
 
   render() {
-    const { match, services } = this.props;
+    const { match, services, authenticated } = this.props;
 
     let servMarkers = [];
 
@@ -36,7 +37,7 @@ class Home extends Component {
       <Box>
         <Services>
           { services ?
-            <Table services={services} match={match} /> :
+            <Table services={services} match={match} auth={authenticated} /> :
             <p>There are no services.</p>
           }
         </Services>
@@ -53,6 +54,10 @@ class Home extends Component {
   }
 }
 
-export default GoogleApiWrapper({
+const mapStateToProps = state => ({
+  authenticated: state.auth.authenticated,
+});
+
+export default connect(mapStateToProps)(GoogleApiWrapper({
   apiKey: "AIzaSyB_nx2VoioGqC2ZEOZ296tQT6jYsh_5y8M"
-})(Home);
+})(Home));

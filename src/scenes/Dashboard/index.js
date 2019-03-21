@@ -32,6 +32,7 @@ class Dashboard extends Component {
       <div className="App" style={{ fontSize: ".875rem" }} >
         <Sidebar />
         <Services match={this.props.match}
+          auth={authenticated}
           services={services}
           updateServices={updateServices}
           watchLocation={watchLocation}/>
