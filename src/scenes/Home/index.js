@@ -1,6 +1,5 @@
 import React, { Component } from 'react'
 import Table from '../Dashboard/components/Services/components/Table/index.js'
-import axios from 'axios';
 import { InfoWindow, Marker, GoogleApiWrapper } from 'google-maps-react';
 import Map from './components/Map/'
 import styled from 'styled-components'
@@ -12,43 +11,23 @@ const Box = styled.div`
   grid-template-columns: 1fr 2fr;
 `
 const Services = styled.div`
+  min-width: 66%;
   align-self: center;
   justify-self: center;
 `
 
 class Home extends Component {
-  constructor(props) {
-    super(props);
-
-    this.state = {
-      services: null,
-    }
-
-    this.fetchServices = this.fetchServices.bind(this);
-  }
-
   componentDidMount() {
-    this.fetchServices();
-  }
-
-  async fetchServices() {
-    try {
-      const response = await axios.get('http://homestead.test/api/services');
-      this.setState({ services: response.data });
-    } catch(error) {
-      console.log(error);
-    }
+    this.props.watchLocation();
   }
 
   render() {
-    const { services } = this.state;
-    const { match } = this.props;
+    const { match, services } = this.props;
 
     let servMarkers = [];
 
     if(services) {
       servMarkers = services.map((service) => {
-        console.log(service);
         return {id: service.id, latlng: { lat: service.latitude, lng: service.longitude } };
       });
     }
