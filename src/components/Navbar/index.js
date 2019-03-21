@@ -28,6 +28,11 @@ const Brand = styled(Link)`
   box-shadow: inset -1px 0 0 rgba(0, 0, 0, .25);
 `
 
+const SearchForm = styled.form`
+  width: 100%;
+  display: flex;
+`
+
 const Search = styled.input`
   padding: .75rem 1rem;
   border-width: 0;
@@ -46,7 +51,23 @@ const Search = styled.input`
 const Navbar = (props) =>
   <nav className="navbar navbar-dark fixed-top bg-dark flex-md-nowrap p-0 shadow">
     <Brand className="navbar-brand col-sm-3 col-md-2 mr-0" to="/">FindYourService</Brand>
-    <Search className="form-control form-control-dark w-100" type="text" placeholder="Search" aria-label="Search"></Search>
+    <SearchForm onSubmit={props.onSearch}>
+      <Search className="form-control form-control-dark w-100"
+        name="search"
+        onChange={props.changeHandler} 
+        type="text"
+        placeholder="Search" aria-label="Search"></Search>
+      <select name="radius" onChange={props.changeHandler} style={{ width: '120px', marginLeft: '10px' }}>
+        <option value={0}>Anywhere</option>
+        <option value={1}>1km</option>
+        <option value={2}>2km</option>
+        <option value={5}>5km</option>
+        <option value={10}>10km</option>
+        <option value={25}>25km</option>
+        <option value={50}>50km</option>
+        <option value={100}>100km</option>
+      </select>
+    </SearchForm>
     <ul className="navbar-nav px-3">
       <li className="nav-item text-nowrap">
         { props.authenticated ?
