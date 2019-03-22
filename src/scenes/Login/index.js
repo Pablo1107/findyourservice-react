@@ -3,6 +3,7 @@ import { connect } from 'react-redux';
 import { loginUser } from 'actions/authActions.js';
 import styled from 'styled-components';
 import LoginForm from './components/LoginForm/index.js'
+import loadingSvg from 'assets/loading.svg'
 
 const FormPage = styled.div`
   height: 100vh;
@@ -30,10 +31,15 @@ class Login extends Component {
   }
 
   render() {
+    const { requested } = this.props;
+
     return (
       <FormPage className='form-page'>
-        <LoginForm history={this.props.history}
-          loginUser={this.props.loginUser} />
+        { requested ?
+            <img src={loadingSvg} alt="" /> :
+            <LoginForm history={this.props.history}
+              loginUser={this.props.loginUser} />
+        }
       </FormPage>
     );
   }
@@ -41,6 +47,7 @@ class Login extends Component {
 
 const mapStateToProps = state => ({
   authenticated: state.auth.authenticated,
+  requested: state.auth.requested,
 });
 
 export default connect(mapStateToProps, { loginUser })(Login);
