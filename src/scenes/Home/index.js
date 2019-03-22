@@ -81,7 +81,7 @@ class Home extends Component {
               <InfoWindow
 								marker={this.state.activeMarker}
 								visible={this.state.showingInfoWindow}>
-                { this.state.activeMarker.service &&
+                { this.state.activeMarker.service ?
 									<div>
 										<div style={{fontWeight: '500', fontSize: '14px'}}>
                       {this.state.activeMarker.service.title}
@@ -93,7 +93,8 @@ class Home extends Component {
 											<div>{this.state.activeMarker.service.city}</div>
 											<div>{this.state.activeMarker.service.state}</div>
 										</div>
-									</div>
+                  </div> :
+                  <div> </div>
                 }
 							</InfoWindow>
 						</Map>
