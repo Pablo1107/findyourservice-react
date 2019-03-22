@@ -23,15 +23,15 @@ export const fetchAuthUser = () => async dispatch => {
 };
 
 export const loginUser = (email, password) => async dispatch => {
+  dispatch({
+    type: LOGIN_REQUEST
+  });
   const response = await axios.post('/api/login/',
     {
       email,
       password,
     });
   store.set('AUTH_TOKEN', response.data);
-  dispatch({
-    type: LOGIN_REQUEST
-  });
   dispatch(fetchAuthUser());
 }
 
