@@ -54,19 +54,20 @@ const Navbar = (props) =>
     <SearchForm onSubmit={props.onSearch}>
       <Search className="form-control form-control-dark w-100"
         name="search"
+        value={props.search}
         onChange={props.changeHandler} 
         type="text"
         placeholder="Search" aria-label="Search"></Search>
       <select name="radius" onChange={props.changeHandler} style={{ width: '120px', marginLeft: '10px' }}>
         <option value={0}>Anywhere</option>
         { Object.keys(props.userLocation).length !== 0 && [
-            <option value={1}>1km</option>,
-            <option value={2}>2km</option>,
-            <option value={5}>5km</option>,
-            <option value={10}>10km</option>,
-            <option value={25}>25km</option>,
-            <option value={50}>50km</option>,
-            <option value={100}>100km</option>
+            <option key={1} value={1}>1km</option>,
+            <option key={2} value={2}>2km</option>,
+            <option key={3} value={5}>5km</option>,
+            <option key={4} value={10}>10km</option>,
+            <option key={5} value={25}>25km</option>,
+            <option key={6} value={50}>50km</option>,
+            <option key={7} value={100}>100km</option>
           ]
         }
       </select>
