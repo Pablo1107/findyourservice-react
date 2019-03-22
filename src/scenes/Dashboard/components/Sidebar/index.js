@@ -1,4 +1,5 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 import styled from 'styled-components';
 
 const Nav = styled.nav`
@@ -20,7 +21,7 @@ const Sticky = styled.div`
   overflow-y: auto;
 `
 
-const Navlink = styled.a`
+const Navlink = styled(Link)`
   font-weight: 500;
   color: ${props => props.active ? "#007bff" : "#333"};
 `
@@ -32,13 +33,13 @@ const Sidebar = () =>
         <Sticky className="sidebar-sticky">
           <ul className="nav flex-column">
             <li className="nav-item">
-              <Navlink className="nav-link" href="/">
+              <Navlink className="nav-link" to="/">
                 <span data-feather="file"></span>
                 Back to Public View
               </Navlink>
             </li>
             <li className="nav-item">
-              <Navlink active className="nav-link" href="/admin">
+              <Navlink active={1} className="nav-link" to="/admin">
                 <span data-feather="home"></span>
                 Dashboard <span className="sr-only">(current)</span>
               </Navlink>
