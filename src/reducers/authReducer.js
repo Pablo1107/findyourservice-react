@@ -3,7 +3,8 @@ import { LOGIN_REQUEST, LOGIN_SUCCESS, LOGIN_FAILED, LOGOUT } from '../actions/t
 const initialState = {
   user: {},
   authenticated: false,
-  logout: false
+  logout: false,
+  requested: false,
 };
 
 export default function(state = initialState, action) {
@@ -18,18 +19,21 @@ export default function(state = initialState, action) {
       return {
         ...state,
         user: action.payload,
+        requested: false,
         authenticated: true
       };
     case LOGIN_FAILED:
       return {
         ...state,
         user: {},
+        requested: false,
         authenticated: false
       };
     case LOGOUT:
       return {
         ...state,
         user: {},
+        requested: false,
         authenticated: false,
         logout: true,
       };
